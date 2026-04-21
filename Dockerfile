@@ -40,5 +40,5 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000 8080
 
-CMD ["sh", "-c", "airflow standalone & sleep 15 && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
-CMD ["sh", "-c", "airflow standalone & sleep 5 && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# We only run the scheduler and webserver, skipping the triggerer to save RAM
+CMD ["sh", "-c", "airflow db migrate && (airflow webserver --port 8080 & airflow scheduler & python -m uvicorn app.main:app --host 0.0.0.0 --port 8000)"]
