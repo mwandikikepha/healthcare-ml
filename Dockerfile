@@ -16,11 +16,11 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 # Copy project files
 COPY . .
 
-# --- THE FIXES ---
-# 1. Force install fastapi[standard] and apache-airflow
-# 2. Sync everything
-RUN uv pip install "fastapi[standard]" apache-airflow
-RUN uv sync
+# Use --system so uv doesn't look for a .venv
+RUN uv pip install --system "fastapi[standard]" "apache-airflow==2.10.2" "psycopg2-binary"
+
+# 2. Sync the rest of your project dependencies
+RUN uv sync --system
 
 # Set environment variables
 ENV AIRFLOW_HOME=/app/airflow_home
@@ -30,6 +30,6 @@ ENV PYTHONUNBUFFERED=1
 # Expose ports
 EXPOSE 8000 8080
 
-# --- THE FIX FOR SPAWNING ---
-# We use 'uv run' explicitly for both to ensure the virtualenv is used
-CMD ["sh", "-c", "uv run airflow standalone & uv run fastapi run web/app.py --port 8000"]
+# --- THE START COMMAND ---
+# Now we can call the binaries directly because they are in the system PATH
+CMD ["sh", "-c", "airflow standalone & fastapi run web/app.py --port 8000"]
