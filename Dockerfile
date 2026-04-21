@@ -26,7 +26,8 @@ RUN uv pip install --system \
     "joblib" \
     "uvicorn" \
     "pandas" \
-    "numpy"
+    "numpy" \
+    "scikit-learn"
 
 # --- THE CRITICAL SAFETY CHECK ---
 # This will make the build FAIL in Railway if the model isn't there, 
