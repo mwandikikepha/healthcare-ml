@@ -11,22 +11,20 @@ import os
 app = FastAPI(title="Healthcare Test Result Predictor")
 
 
-# Hardcode the root for Docker to remove ambiguity
-# If running locally on Lenovo, this will fail, so we use a fallback
-if os.path.exists('/app/models'):
+
+# Look for /app first (Docker), then fallback to local relative path
+if os.path.isdir('/app/models'):
     BASE_DIR = '/app'
 else:
-    # This is for your local Lenovo environment
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Gets the root by going up from app/main.py
+    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def load_artifact(filename):
     path = os.path.join(BASE_DIR, 'models', filename)
-    # This print will show up in Railway logs so we can see the path it's trying
-    print(f"DEBUG: Attempting to load artifact from: {path}") 
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Artifact not found at: {path}")
+    print(f"DEBUG: Loading from {path}")
     return joblib.load(path)
 
+# Ensure these all load from the same BASE_DIR
 model = load_artifact('final_model.joblib')
 ohe = load_artifact('onehot_encoder.joblib')
 scaler = load_artifact('scaler.joblib')
