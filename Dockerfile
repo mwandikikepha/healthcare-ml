@@ -19,9 +19,11 @@ COPY . .
 
 # --- DEPENDENCY INSTALLATION ---
 # 1. Install core services and drivers into the system environment
+
 RUN uv pip install --system \
     "fastapi[standard]" \
     "apache-airflow==2.10.2" \
+    "sqlalchemy<2.0" \
     "psycopg2-binary" \
     "xgboost" \
     "joblib" \
