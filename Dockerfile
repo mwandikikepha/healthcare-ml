@@ -34,5 +34,4 @@ EXPOSE 8000 8080
 
 # --- START COMMAND ---
 # We use shell form to handle the background process for Airflow
-CMD ["sh", "-c", "airflow standalone & fastapi run web/app.py --port 8000"]ecause they are in the system PATH
-CMD ["sh", "-c", "airflow standalone & fastapi run web/app.py --port 8000"]
+CMD ["sh", "-c", "airflow standalone & fastapi run app.py --host 0.0.0.0 --port 8000"]
