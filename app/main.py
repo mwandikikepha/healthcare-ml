@@ -12,7 +12,8 @@ app = FastAPI(title="Healthcare Test Result Predictor")
 
 # 2. Load our "Brain" and "Translators"
 # These paths assume you are running uvicorn from the root: ~/healthcare-ml
-model = joblib.load('models/final_model.joblib')
+
+model = joblib.load('/app/models/final_model.joblib')
 ohe = joblib.load('models/onehot_encoder.joblib')
 scaler = joblib.load('models/scaler.joblib')
 le = joblib.load('models/label_encoder.joblib')
