@@ -10,13 +10,18 @@ import os
 # 1. Initialize FastAPI
 app = FastAPI(title="Healthcare Test Result Predictor")
 
-# 2. Load our "Brain" and "Translators"
-# These paths assume you are running uvicorn from the root: ~/healthcare-ml
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-model = joblib.load('/app/models/final_model.joblib')
-ohe = joblib.load('models/onehot_encoder.joblib')
-scaler = joblib.load('models/scaler.joblib')
-le = joblib.load('models/label_encoder.joblib')
+def load_artifact(filename):
+    path = os.path.join(BASE_DIR, 'models', filename)
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Artifact not found at: {path}")
+    return joblib.load(path)
+
+model = load_artifact('final_model.joblib')
+ohe = load_artifact('onehot_encoder.joblib')
+scaler = load_artifact('scaler.joblib')
+le = load_artifact('label_encoder.joblib')
 
 # 3. Define the Request Structure (Pydantic)
 class PatientData(BaseModel):
