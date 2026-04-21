@@ -24,7 +24,9 @@ RUN uv pip install --system \
     "psycopg2-binary" \
     "xgboost" \
     "joblib" \
-    "uvicorn"
+    "uvicorn" \
+    "pandas" \
+    "numpy"
 
 # --- THE CRITICAL SAFETY CHECK ---
 # This will make the build FAIL in Railway if the model isn't there, 
