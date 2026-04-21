@@ -1,34 +1,35 @@
 # Use a slim Python 3.12 image
 FROM python:3.12-slim
 
-# Install system dependencies for Postgres, SSL (for Aiven), and Airflow
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
 WORKDIR /app
 
-# Install 'uv' from the official binary
+# Install 'uv'
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Copy your project files into the container
+# Copy project files
 COPY . .
 
-# Install dependencies using uv
-# (This assumes you have a pyproject.toml or requirements.txt)
+# --- THE FIXES ---
+# 1. Force install fastapi[standard] and apache-airflow
+# 2. Sync everything
+RUN uv pip install "fastapi[standard]" apache-airflow
 RUN uv sync
 
-# Set critical environment variables
+# Set environment variables
 ENV AIRFLOW_HOME=/app/airflow_home
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 
-# Expose ports for FastAPI (8000) and Airflow (8080)
+# Expose ports
 EXPOSE 8000 8080
 
-# Initialize Airflow DB and start both services
-# We use 'standalone' for Airflow to simplify process management in a single container
+# --- THE FIX FOR SPAWNING ---
+# We use 'uv run' explicitly for both to ensure the virtualenv is used
 CMD ["sh", "-c", "uv run airflow standalone & uv run fastapi run web/app.py --port 8000"]
