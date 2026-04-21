@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: healthcare_ml_app
+    restart: always
+    # Automatically loads DB_CONN and other vars from your .env file
+    env_file:
+      - .env
+    ports:
+      - "8000:8000" # FastAPI Web UI
+      - "8080:8080" # Airflow Dashboard
+    volumes:
+      # Syncs your local project folder with the container for development
+      - .:/app
+      # Persists Airflow logs and local metadata so they aren't lost on restart
+      - ./airflow_home:/app/airflow_home
+    # Ensures the container can reach the Aiven cloud database
+    network_mode: "bridge"
+
+# No 'db' service or 'volumes' for Postgres needed since you're using Aiven

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare AI Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 50px; }
+        .card { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        #result-container { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h2 class="text-center mb-4">Patient Test Predictor</h2>
+                    <form id="prediction-form">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Age</label>
+                                <input type="number" id="age" class="form-control" value="45" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select id="gender" class="form-select">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Blood Type</label>
+                                <input type="text" id="blood_type" class="form-control" value="A+" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Medical Condition</label>
+                                <input type="text" id="condition" class="form-control" value="Diabetes" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Insurance</label>
+                                <input type="text" id="insurance" class="form-control" value="Cigna" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Admission Type</label>
+                                <input type="text" id="admission" class="form-control" value="Urgent" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Medication</label>
+                                <input type="text" id="medication" class="form-control" value="Aspirin" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Billing Amount ($)</label>
+                                <input type="number" id="billing" class="form-control" value="1200.50" step="0.01">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Days Hospitalized</label>
+                                <input type="number" id="days" class="form-control" value="5">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4">Predict Test Result</button>
+                    </form>
+
+                    <div id="result-container" class="mt-4 p-3 border rounded text-center">
+                        <h4>Result: <span id="prediction-text" class="text-success"></span></h4>
+                        <p>Confidence: <span id="confidence-text"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                Age: parseInt(document.getElementById('age').value),
+                Gender: document.getElementById('gender').value,
+                Blood_Type: document.getElementById('blood_type').value,
+                Medical_Condition: document.getElementById('condition').value,
+                Insurance_Provider: document.getElementById('insurance').value,
+                Admission_Type: document.getElementById('admission').value,
+                Medication: document.getElementById('medication').value,
+                Days_Hospitalized: parseInt(document.getElementById('days').value),
+                Billing_Amount: parseFloat(document.getElementById('billing').value)
+            };
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('prediction-text').innerText = result.test_result_prediction.toUpperCase();
+            document.getElementById('confidence-text').innerText = result.confidence_score;
+        });
+    </script>
+</body>
+</html>

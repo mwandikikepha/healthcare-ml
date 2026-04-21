@@ -1,0 +1,32 @@
+# --- Python Basics ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+mainenv/
+
+# --- Secrets & Config (CRITICAL) ---
+.env
+# Never upload your Aiven credentials!
+*.env
+
+# --- Airflow Local Data ---
+# We want the code, but NOT the local database or logs
+airflow_home/*.db
+airflow_home/*.log
+airflow_home/*.pid
+airflow_home/*.cfg
+airflow_home/logs/
+airflow_home/webserver_config.py
+
+# --- ML Artifacts ---
+# Usually, we don't git-track the actual model files 
+# because they are large and change every week.
+models/*.joblib
+models/*.pkl
+data/raw/*.csv
+data/processed/*.csv
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
