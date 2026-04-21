@@ -10,10 +10,19 @@ import os
 # 1. Initialize FastAPI
 app = FastAPI(title="Healthcare Test Result Predictor")
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Hardcode the root for Docker to remove ambiguity
+# If running locally on Lenovo, this will fail, so we use a fallback
+if os.path.exists('/app/models'):
+    BASE_DIR = '/app'
+else:
+    # This is for your local Lenovo environment
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def load_artifact(filename):
     path = os.path.join(BASE_DIR, 'models', filename)
+    # This print will show up in Railway logs so we can see the path it's trying
+    print(f"DEBUG: Attempting to load artifact from: {path}") 
     if not os.path.exists(path):
         raise FileNotFoundError(f"Artifact not found at: {path}")
     return joblib.load(path)
