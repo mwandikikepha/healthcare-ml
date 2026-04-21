@@ -18,17 +18,17 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 COPY . .
 
 # --- DEPENDENCY INSTALLATION ---
-# 1. Install core services and drivers into the system environment
 
+RUN uv pip install --system "sqlalchemy<2.0"
+
+# 2. Then install the rest
 RUN uv pip install --system \
     "fastapi[standard]" \
     "apache-airflow==2.10.2" \
-    "sqlalchemy<2.0" \
     "psycopg2-binary" \
     "xgboost" \
     "joblib" \
     "uvicorn"
-
 # 2. Install any additional requirements from your files
 RUN if [ -f requirements.txt ]; then uv pip install --system -r requirements.txt; fi
 
