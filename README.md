@@ -305,4 +305,3 @@ GitHub: [@mwandikikepha](https://github.com/mwandikikepha)
 
 ---
 
-*Built as part of the LuxDevHQ May/June Pre-Internship Project.*
