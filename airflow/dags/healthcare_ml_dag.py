@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import os
 import sys
 
-# 1. HELP AIRFLOW FIND YOUR PROJECT
+# HELP AIRFLOW FIND YOUR PROJECT
 # This allows Airflow to "see" your scripts and ml folders
 PROJECT_ROOT = os.getenv('PYTHONPATH', '/app')
 sys.path.append(PROJECT_ROOT)
