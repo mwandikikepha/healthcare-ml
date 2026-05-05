@@ -4,7 +4,7 @@ from .db_connection import Base
 class CleanedHealthcare(Base):
     __tablename__ = "cleaned_healthcare_data"
 
-    # Primary key is important for SQL best practices
+    
     id = Column(Integer, primary_key=True, autoincrement=True)
     age = Column(Integer)
     gender = Column(String)
